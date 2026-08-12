@@ -1,0 +1,77 @@
+{
+  "protocol_version": "1.0",
+  "run_id": "canonical_20260810_014841",
+  "timestamp": "20260810_014841",
+  "config": {
+    "assets": [
+      "SPY",
+      "GLD",
+      "TLT",
+      "BTC-USD",
+      "DIS"
+    ],
+    "start_date": "2014-01-01",
+    "end_date": "2024-12-31",
+    "validation_size": 0.15,
+    "test_size": 0.15,
+    "feature_cols": [
+      "log_return",
+      "rolling_volatility_20",
+      "daily_range",
+      "volume_change"
+    ],
+    "k_values": [
+      2,
+      3,
+      4
+    ],
+    "covariance_type": "full",
+    "n_iter": 300,
+    "tol": 0.0001,
+    "seeds": [
+      42,
+      123,
+      456
+    ],
+    "context_window": 100,
+    "ma_window": 5,
+    "output_root": "experiments_canonical",
+    "protocol_version": "1.0"
+  },
+  "assets": [
+    "SPY",
+    "GLD",
+    "TLT",
+    "BTC-USD",
+    "DIS"
+  ],
+  "folds_completed": [
+    {
+      "asset": "SPY",
+      "fold": 0,
+      "status": "completed"
+    },
+    {
+      "asset": "GLD",
+      "fold": 0,
+      "status": "completed"
+    },
+    {
+      "asset": "TLT",
+      "fold": 0,
+      "status": "completed"
+    },
+    {
+      "asset": "BTC-USD",
+      "fold": 0,
+      "status": "completed"
+    },
+    {
+      "asset": "DIS",
+      "fold": 0,
+      "status": "completed"
+    }
+  ],
+  "artifacts": {},
+  "git_commit": "3a1cfa163599"
+}
