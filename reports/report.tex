@@ -25,19 +25,15 @@
 \setotherlanguage{english}
 
 % --- Portable Hebrew font setup ---
-% Try David CLM first (preferred), fall back to Noto Serif Hebrew (widely available in TeX Live),
-% then to FreeSerif as last resort.
-% The monospace font is DejaVu Sans Mono (standard in TeX Live).
+% Default to FreeSerif (available in standard TeX Live via fonts-freefont-ttf)
+% Monospace: DejaVu Sans Mono (standard in TeX Live)
+% If David CLM is installed locally, uncomment the font definitions below.
 
-% Define font commands that can be overridden
-% Default to Noto Serif Hebrew which is in standard TeX Live
-\newcommand{\hebrewmainfont}{Noto Serif Hebrew}
-\newcommand{\hebrewsansfont}{Noto Serif Hebrew}
+% \newcommand{\hebrewmainfont}{David CLM}
+% \newcommand{\hebrewsansfont}{David CLM}
+\newcommand{\hebrewmainfont}{FreeSerif}
+\newcommand{\hebrewsansfont}{FreeSerif}
 \newcommand{\hebrewmonofont}{DejaVu Sans Mono}
-
-% If David CLM is installed locally, uncomment the next two lines and comment the Noto lines above:
-% \renewcommand{\hebrewmainfont}{David CLM}
-% \renewcommand{\hebrewsansfont}{David CLM}
 
 \ifxetex
   \setmainfont{\hebrewmainfont}[Renderer=HarfBuzz]
@@ -106,6 +102,19 @@
   justification=justified,
   singlelinecheck=false,
 }
+
+\DeclareRobustCommand{\tech}[1]{\LR{#1}}
+\DeclareRobustCommand{\asset}[1]{\LR{#1}}
+\newcommand{\pct}[1]{\LR{#1\%}}
+\newcommand{\datecode}[1]{\mbox{\textenglish{#1}}}
+% Long run IDs and paths should be allowed to break at punctuation. \nolinkurl
+% keeps a monospaced code appearance while avoiding wide unbreakable boxes.
+\newcommand{\code}[1]{\LR{\nolinkurl{#1}}}
+\newcolumntype{Y}{>{\RaggedLeft\arraybackslash}X}
+\newcolumntype{L}{>{\RaggedRight\arraybackslash}X}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+
+\graphicspath{{../experiments_extended/extended_20260811_121957/}{../experiments_supervised/supervised_20260811_133344/}}
 
 % --- Input sections ---
 \newcommand{\inputsection}[1]{\input{sections/#1}}
