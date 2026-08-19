@@ -234,11 +234,11 @@ xelatex -interaction=nonstopmode -halt-on-error report.tex
 
 Produces `reports/report.pdf`.  
 The LaTeX source uses a portable font setup:
-- **Preferred:** David CLM (if installed locally)
-- **Default fallback:** Noto Serif Hebrew (standard in TeX Live)
+- **Default:** FreeSerif (standard in TeX Live via `fonts-freefont-ttf`)
 - **Monospace:** DejaVu Sans Mono (standard in TeX Live)
+- **Optional local override:** David CLM (if installed locally)
 
-The `report.tex` defines `\hebrewmainfont` as `Noto Serif Hebrew` by default. If David CLM is available on your system, uncomment the line in `report.tex` to use it instead.
+The `report.tex` defines `\hebrewmainfont` as `FreeSerif` by default. If David CLM is available on your system, uncomment the relevant lines in `report.tex` to use it instead.
 
 ---
 
