@@ -19,19 +19,46 @@
 \usepackage{fancyhdr}
 \usepackage{hyperref}
 \usepackage{polyglossia}
+\usepackage{iftex}
 
 \setdefaultlanguage{hebrew}
 \setotherlanguage{english}
 
-% Final submission typography: David CLM for Hebrew/Latin prose and headings.
-% Keep a separate monospace font for code, paths, and run IDs.
-\setmainfont{David CLM}
-\setsansfont{David CLM}
-\newfontfamily\hebrewfont{David CLM}[Script=Hebrew,Renderer=HarfBuzz]
-\newfontfamily\hebrewfontsf{David CLM}[Script=Hebrew,Renderer=HarfBuzz]
-\newfontfamily\englishfont{David CLM}[Renderer=HarfBuzz]
-\setmonofont{DejaVu Sans Mono}
-\newfontfamily\hebrewfonttt{DejaVu Sans Mono}[Renderer=HarfBuzz]
+% --- Portable Hebrew font setup ---
+% Try David CLM first (preferred), fall back to Noto Serif Hebrew (widely available in TeX Live),
+% then to FreeSerif as last resort.
+% The monospace font is DejaVu Sans Mono (standard in TeX Live).
+
+% Define font commands that can be overridden
+% Default to Noto Serif Hebrew which is in standard TeX Live
+\newcommand{\hebrewmainfont}{Noto Serif Hebrew}
+\newcommand{\hebrewsansfont}{Noto Serif Hebrew}
+\newcommand{\hebrewmonofont}{DejaVu Sans Mono}
+
+% If David CLM is installed locally, uncomment the next two lines and comment the Noto lines above:
+% \renewcommand{\hebrewmainfont}{David CLM}
+% \renewcommand{\hebrewsansfont}{David CLM}
+
+\ifxetex
+  \setmainfont{\hebrewmainfont}[Renderer=HarfBuzz]
+  \setsansfont{\hebrewsansfont}[Renderer=HarfBuzz]
+  \newfontfamily\hebrewfont{\hebrewmainfont}[Script=Hebrew,Renderer=HarfBuzz]
+  \newfontfamily\hebrewfontsf{\hebrewsansfont}[Script=Hebrew,Renderer=HarfBuzz]
+  \newfontfamily\englishfont{\hebrewmainfont}[Renderer=HarfBuzz]
+  \setmonofont{\hebrewmonofont}
+  \newfontfamily\hebrewfonttt{\hebrewmonofont}[Renderer=HarfBuzz]
+\fi
+
+\ifluatex
+  \usepackage{luaotfload}
+  \setmainfont{\hebrewmainfont}[Renderer=HarfBuzz]
+  \setsansfont{\hebrewsansfont}[Renderer=HarfBuzz]
+  \newfontfamily\hebrewfont{\hebrewmainfont}[Script=Hebrew,Renderer=HarfBuzz]
+  \newfontfamily\hebrewfontsf{\hebrewsansfont}[Script=Hebrew,Renderer=HarfBuzz]
+  \newfontfamily\englishfont{\hebrewmainfont}[Renderer=HarfBuzz]
+  \setmonofont{\hebrewmonofont}
+  \newfontfamily\hebrewfonttt{\hebrewmonofont}[Renderer=HarfBuzz]
+\fi
 
 \definecolor{academicblue}{RGB}{31,73,112}
 \definecolor{deepnavy}{RGB}{25,48,72}
@@ -78,102 +105,58 @@
   textfont={color=mutedgray},
   justification=justified,
   singlelinecheck=false,
-  skip=5pt
 }
-\renewcommand{\arraystretch}{1.16}
-\setlength{\tabcolsep}{5pt}
-\setlength{\textfloatsep}{1.05em plus 0.2em minus 0.2em}
-\setlength{\intextsep}{0.95em plus 0.2em minus 0.2em}
 
-\pagestyle{fancy}
-\fancyhf{}
-\fancyhead[R]{\sffamily\small\color{mutedgray} \LR{Gaussian HMM} לזיהוי משטרי שוק}
-\fancyhead[L]{\sffamily\small\color{mutedgray} \LR{Advanced Machine Learning}}
-\fancyfoot[C]{\sffamily\small\color{mutedgray}\thepage}
-\renewcommand{\headrulewidth}{0.35pt}
-\renewcommand{\headrule}{\hbox to\headwidth{\color{linegray}\leaders\hrule height \headrulewidth\hfill}}
-\setlength{\headheight}{17pt}
-
-\DeclareRobustCommand{\tech}[1]{\LR{#1}}
-\DeclareRobustCommand{\asset}[1]{\LR{#1}}
-\newcommand{\pct}[1]{\LR{#1\%}}
-\newcommand{\datecode}[1]{\mbox{\textenglish{#1}}}
-% Long run IDs and paths should be allowed to break at punctuation. \nolinkurl
-% keeps a monospaced code appearance while avoiding wide unbreakable boxes.
-\newcommand{\code}[1]{\LR{\nolinkurl{#1}}}
-\newcolumntype{Y}{>{\RaggedLeft\arraybackslash}X}
-\newcolumntype{L}{>{\RaggedRight\arraybackslash}X}
-\newcolumntype{C}{>{\centering\arraybackslash}X}
-
-\graphicspath{{../experiments_extended/extended_20260811_121957/}{../experiments_supervised/supervised_20260811_133344/}}
+% --- Input sections ---
+\newcommand{\inputsection}[1]{\input{sections/#1}}
 
 \begin{document}
 
-\begin{titlepage}
 \thispagestyle{empty}
 \begin{center}
-\vspace*{0.9cm}
-{\sffamily\Large\color{mutedgray} המכללה האקדמית להנדסה אפקה \par}
-\vspace{0.22cm}
-{\sffamily\large\color{mutedgray} תואר שני במערכות תבוניות \par}
-
-\vspace{1.45cm}
-{\color{linegray}\rule{0.82\textwidth}{0.8pt}}\par
-\vspace{0.85cm}
-{\sffamily\Huge\bfseries\color{academicblue} \LR{Gaussian HMM} \par}
-\vspace{0.18cm}
-{\sffamily\huge\bfseries\color{academicblue} לזיהוי משטרי שוק ולחיזוי כיוון יומי \par}
-\vspace{0.75cm}
-{\sffamily\Large\color{deepnavy} ניתוח רב־נכסי ויציבות משטרים \par}
-\vspace{0.18cm}
-{\sffamily\Large\color{deepnavy} והשוואה למודלי בסיס ול־\LR{Supervised ML} \par}
-\vspace{0.8cm}
-{\color{linegray}\rule{0.82\textwidth}{0.8pt}}\par
-
-\vspace{1.35cm}
-{\sffamily\large עבודת גמר בקורס \textbf{שיטות מתקדמות בלמידת מכונה} \par}
-
+\vspace*{2.5cm}
+{\sffamily\Huge\bfseries\color{academicblue}
+Gaussian HMM לזיהוי משטרי שוק ולחיזוי כיוון יומי\\[0.5em]
+}
+\vspace{1.2cm}
+{\sffamily\Large\color{deepnavy}
+מחקר אמפירי רב־נכסי בפרוטוקול כרונולוגי נעול
+}
+\vspace{2cm}
+{\sffamily\large
+מתן אשל \quad | \quad מס׳ סטודנט: 203502802\\[0.5em]
+שיטות מתקדמות בלמידת מכונה \quad | \quad אפקה — המכללה האקדמית להנדסה\\[0.5em]
+\the\year
+}
 \vfill
-{\sffamily\Large\bfseries\color{deepnavy} מתן אשל \par}
-\vspace{0.25cm}
-{\sffamily\large מספר סטודנט: \LR{203502802} \par}
-\vspace{0.75cm}
-{\sffamily\large\color{mutedgray} אוגוסט 2026 \par}
-\vspace{0.75cm}
+{\small\color{mutedgray}
+אין בדוח זה טענת רווחיות ואין לראות בו ייעוץ השקעות.
+}
 \end{center}
-\end{titlepage}
+\clearpage
 
 \pagenumbering{roman}
-\input{sections/00_abstract}
-\clearpage
-\begingroup
-\small
-\setlength{\parskip}{0pt}
 \tableofcontents
-\endgroup
-\thispagestyle{plain}
 \clearpage
+
 \pagenumbering{arabic}
+\setcounter{page}{1}
 
-\input{sections/01_intro}
-\input{sections/02_data_protocol}
-\input{sections/03_method}
-\input{sections/04_experiments}
-\input{sections/05_regime_results}
-\input{sections/06_prediction_results}
-\input{sections/07_discussion}
-\input{sections/08_rl_future_work}
-\input{sections/09_limitations_conclusion}
-\input{sections/10_reproducibility}
+\inputsection{00_abstract}
+\inputsection{01_intro}
+\inputsection{02_data_protocol}
+\inputsection{03_method}
+\inputsection{04_experiments}
+\inputsection{05_regime_results}
+\inputsection{06_prediction_results}
+\inputsection{07_discussion}
+\inputsection{08_rl_future_work}
+\inputsection{09_limitations_conclusion}
+\inputsection{10_reproducibility}
 
 \clearpage
-\begingroup
-\small
-\begin{english}
-\renewcommand{\refname}{\makebox[\textwidth][r]{\texthebrew{מקורות}}}
+\addcontentsline{toc}{section}{מקורות}
 \bibliographystyle{plain}
 \bibliography{references}
-\end{english}
-\endgroup
 
 \end{document}
