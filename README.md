@@ -164,31 +164,34 @@ The notebook **uses saved verified experiment artifacts by default** (no network
 For the easiest platform-independent review, use Google Colab.
 This avoids local Python, Windows, WSL, and dependency configuration issues.
 
-The Colab launcher automatically:
-
-1. Clones the public GitHub repository.
-2. Installs the exact Python dependencies.
-3. Runs the automated test suite.
-4. Executes the final project notebook from top to bottom.
-5. Verifies that the saved experiment artifacts, tables, and figures load correctly.
-
-The main scientific notebook already contains saved outputs, so the project
-can also be reviewed directly on GitHub without rerunning the experiments.
-
-A complete re-training of all HMM experiments is optional and may take
-several minutes and require access to Yahoo Finance.
+Open the complete project notebook in Colab:
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/matanesh/hmm-market-regimes-final-project/blob/main/HMM_Market_Regimes_Project_Colab.ipynb)
+
+This Colab notebook contains the **complete scientific notebook** plus the
+environment setup required for Colab. It is **not just a launcher** — the
+full analysis, code, tables, figures, and conclusions are all in this
+single notebook.
+
+### How to use
+
+1. Open the Colab link above.
+2. Select **Runtime → Run all**.
+3. Wait for setup (repository clone, dependency install, tests).
+4. Continue directly through the complete scientific notebook.
+5. See the full analysis, code, tables, figures, and conclusions in this same notebook.
+
+No local environment, Windows/WSL configuration, or manual file uploads are required.
 
 ---
 
 ## Recommended Review Order
 
 1. **Fastest** — view the already-executed
-   `HMM_Market_Regimes_Project.ipynb` directly on GitHub.
+   `HMM_Market_Regimes_Project.ipynb` directly on GitHub (saved outputs visible).
 
-2. **Recommended reproducibility check** — use
-   "Run in Google Colab" (badge above).
+2. **Recommended reproducibility check** — use **Run in Google Colab** (badge above).
+   The Colab notebook contains the complete scientific notebook plus setup.
 
 3. **Advanced / full reproduction** — clone the repository locally and run:
    ```bash
@@ -200,7 +203,8 @@ because it provides a clean and consistent environment.
 
 > **Note:** Colab is not necessarily the best environment for the complete
 > 9-asset, 5-seed experiment, because runtime limits and Yahoo Finance
-> network availability may vary.
+> network availability may vary. The Colab notebook includes optional
+> cells for full re-training (disabled by default).
 
 ---
 
