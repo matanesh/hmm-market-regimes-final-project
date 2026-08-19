@@ -1,0 +1,32 @@
+{
+  "asset": "NVDA",
+  "selected_k": 4,
+  "selected_seed": 789,
+  "selected_by": "validation_log_likelihood",
+  "selection_validation_log_likelihood": -2161.772328109479,
+  "selection_validation_log_likelihood_per_observation": -5.259786686397759,
+  "final_fit_converged": true,
+  "final_fit_iterations": 119,
+  "final_fit_time_sec": 0.5042564868927002,
+  "final_train_log_likelihood": -9097.872261216398,
+  "final_test_log_likelihood": -1732.0949758362913,
+  "final_aic_train": 18337.744522432797,
+  "final_bic_train": 18746.312712303195,
+  "posterior_uncertainty": {
+    "n_test_observations": 412,
+    "n_posterior_argmax_switches": 48,
+    "switch_rate_pct": 11.650485436893204,
+    "mean_entropy": 0.10144811330598072,
+    "median_entropy": 0.024808247809418617,
+    "mean_confidence": 0.9487247348540525,
+    "mean_entropy_on_switch_days": 0.3251836092741678,
+    "mean_entropy_on_non_switch_days": 0.07194453142006592,
+    "mean_entropy_near_switch_plus_minus_1": 0.2408097296043095,
+    "entropy_abs_return_correlation": 0.08412596871573529,
+    "entropy_rolling_volatility_correlation": -0.10791785815314947,
+    "low_entropy_quartile_mean_abs_return_pct": 2.575809536484783,
+    "high_entropy_quartile_mean_abs_return_pct": 2.5732049090341524,
+    "low_entropy_quartile_mean_rolling_vol_pct": 3.1201122763365006,
+    "high_entropy_quartile_mean_rolling_vol_pct": 2.7988916484145596
+  }
+}

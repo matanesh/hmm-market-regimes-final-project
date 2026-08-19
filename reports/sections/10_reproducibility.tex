@@ -1,0 +1,29 @@
+\appendix
+\section{שחזור והרצה}
+
+הדוח והמחברת קוראים תוצאות machine-readable מה־artifacts המאומתים, ולכן ניתן לעיין בהם בלי לאמן מחדש את כל המודלים. הריצות המרכזיות הן:
+
+\begin{itemize}
+    \item \code{experiments_extended/extended_20260811_121957/}
+    \item \code{experiments_supervised/supervised_20260811_133344/}
+\end{itemize}
+
+סביבת הריצה המאומתת הייתה Python 3.11.15. בריצת ה־HMM נעשה שימוש ב־hmmlearn 0.3.3, NumPy 2.4.6, pandas 3.0.3 ו־scikit-learn 1.9.0.
+
+להרצה מחדש:
+
+\begin{english}
+\begin{verbatim}
+python -m pip install -r requirements.txt
+python run_extended_analysis.py
+python analyze_extended_context.py \
+  --run-dir experiments_extended/<run_id>
+python run_supervised_baselines.py
+jupyter nbconvert --to notebook --execute \
+  HMM_Market_Regimes_Project.ipynb \
+  --output /tmp/HMM_verified.ipynb \
+  --ExecutePreprocessor.timeout=600
+\end{verbatim}
+\end{english}
+
+כל ריצה חדשה נכתבת לתיקייה timestamped חדשה ואינה אמורה לדרוס את התוצרים שעליהם מבוסס הדוח. הדבר חשוב במיוחד משום שמקור הנתונים חיצוני ונתוני Yahoo Finance יכולים להתעדכן לאורך זמן.

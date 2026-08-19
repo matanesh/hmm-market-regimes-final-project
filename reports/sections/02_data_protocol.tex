@@ -1,0 +1,61 @@
+\section{נתונים, \tech{Features} ופרוטוקול ניסוי}
+
+\subsection{פאנל הנכסים}
+
+במקום להוסיף מספר גדול של מניות דומות, נבחר פאנל קטן יחסית אך מגוון מבחינה כלכלית. הנתונים נמשכו דרך \tech{yfinance} \cite{yfinance} עבור חלון בקשה של \datecode{2014-01-01--2024-12-31}. הנכסים הם:
+
+\begin{itemize}
+    \item \asset{SPY} — שוק המניות האמריקאי הרחב, ומשמש גם נכס ייחוס לניתוח cross-asset.
+    \item \asset{QQQ} — מניות צמיחה וטכנולוגיה גדולות.
+    \item \asset{IWM} — מניות small-cap.
+    \item \asset{TLT} — אג"ח ממשלתיות אמריקאיות ארוכות.
+    \item \asset{GLD} — זהב.
+    \item \asset{HYG} — אג"ח חברות high-yield, כנכס אשראי מסוכן יחסית.
+    \item \asset{BTC-USD} — נכס אלטרנטיבי בעל volatility גבוהה.
+    \item \asset{JPM} — מניה גדולה מסקטור הפיננסים.
+    \item \asset{NVDA} — מניית צמיחה/high-beta.
+\end{itemize}
+
+המטרה בבחירה זו אינה לבצע stock picking אלא לבדוק אם אותה מתודולוגיה מתנהגת באופן דומה על asset classes בעלי מאפייני סיכון שונים. חשוב לציין שהטווח לעיל הוא חלון הבקשה המשותף; בפועל זמינות הנתונים שונה מעט בין הנכסים. בפרט, סדרת \asset{BTC-USD} מתחילה מאוחר יותר ולכן מכילה יותר ימי מסחר קלנדריים אך היסטוריה קצרה יותר בתחילת המדגם. כל split מחושב מתוך התצפיות הזמינות בפועל לכל נכס.
+
+ההורדה בוצעה עם \tech{auto\_adjust=False}. לחישובי התשואה והיעד נעשה שימוש ב־\tech{Adj Close} כאשר העמודה זמינה, וב־\tech{Close} כ־fallback. אין השלמה מלאכותית של ימים חסרים: שורות OHLCV חסרות או ערכים לא־סופיים מוסרים, ולאחר בניית Features מוסרות גם שורות שאין עבורן היסטוריית rolling מספקת או target של יום הבא. בניתוח cross-asset נעשה שימוש רק בתאריכים החופפים בפועל בין הסדרות.
+
+\subsection{\tech{Feature Vector}}
+
+לכל יום \(t\) נבנה וקטור תצפיות בן ארבעה רכיבים:
+
+\begin{equation}
+\mathbf{x}_t = \left[r_t,\; \sigma_t^{(20)},\; R_t,\; \Delta\log V_t\right],
+\end{equation}
+
+כאשר
+
+\begin{equation}
+r_t = \log\left(\frac{P_t}{P_{t-1}}\right)
+\end{equation}
+
+היא התשואה הלוגריתמית, \(\sigma_t^{(20)}\) היא סטיית התקן המתגלגלת של תשואות 20 הימים האחרונים, \(R_t\) הוא daily range המבוסס על High ו־Low, ו־\(\Delta\log V_t\) הוא שינוי לוגריתמי בנפח. הבחירה בתכונות פשוטות נעשתה במכוון: הן מייצגות כיוון, תנודתיות, טווח מסחר ופעילות, בלי להעמיס אינדיקטורים טכניים שקשה לבודד את תרומתם.
+
+כל statistic מתגלגל מחושב מהעבר וההווה בלבד. אין שימוש בנתוני יום \(t+1\) בבניית Features של יום \(t\).
+
+\subsection{יעד החיזוי והחלוקה הכרונולוגית}
+
+יעד החיזוי הוא כיוון התשואה ביום הבא. לצורך כך ממירים את התשואה לתווית בינארית: הערך 1 מציין שהתשואה ביום הבא חיובית או אפס, והערך 0 מציין תשואה שלילית:
+
+\begin{equation}
+y_t =
+\begin{cases}
+1, & r_{t+1} \ge 0,\\
+0, & r_{t+1} < 0.
+\end{cases}
+\end{equation}
+
+החלוקה היא כרונולוגית בקירוב \pct{70} Train, \pct{15} Validation ו־\pct{15} Test. אין shuffle. כדי למנוע leakage בגבולות, שורה אחרונה בכל partition מוסרת אם ה־target שלה שייך כבר ל־partition הבא.
+
+חשוב להבחין בין \textbf{שלב בחירת המודל} לבין \textbf{ההתאמה הסופית לפני Test}. בזמן השוואת מועמדי HMM, ה־scaler מותאם על Train בלבד, המועמדים מאומנים על Train ונמדדים על Validation. רק לאחר ש־\(K\) וה־seed ננעלים, ה־HMM הנבחר וה־scaler מותאמים מחדש על כל היסטוריית pre-Test, כלומר Train+Validation, ואז Test נשאר מחוץ לאימון ולהתאמת ה־preprocessing. זהו refit סטנדרטי לאחר model selection ואינו חושף את המודל ל־Test.
+
+בריצת ה־Supervised ML הוגדרו hyperparameters קבועים מראש ולכן לא בוצע model selection על Validation. שלושת ה־classifiers, ובפרט ה־scaler של Logistic Regression, הותאמו על Train בלבד ונבדקו על אותו Test כרונולוגי. נשמרו assertions מפורשים כי target-safe split מתקיים, אין shuffle, ו־Test אינו משמש לבחירה או התאמה. לכן ההשוואה משתמשת באותו Feature Vector ובאותו Test, אך היקף היסטוריית האימון אינו זהה לחלוטין בין ה־HMM הסופי לבין מודלי ה־Supervised; הנקודה הזו נלקחת בחשבון בפרשנות התוצאות.
+
+\subsection{שחזור ומעקב אחר \tech{provenance}}
+
+כל ריצה נשמרת בתיקייה חדשה עם manifest המכיל תאריך, Git commit, גרסאות packages, רשימת נכסים, Features, seeds, hyperparameters וסטטוס השלמה. הריצה המרכזית של ה־HMM היא \code{extended_20260811_121957}, והריצה של מודלי ה־Supervised ML היא \code{supervised_20260811_133344}. תוצאות קודמות נשמרו לצורך audit אך אינן משמשות לטענות המספריות בדוח זה.

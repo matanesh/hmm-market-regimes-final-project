@@ -1,0 +1,26 @@
+\section{מגבלות}
+
+למרות ההרחבות שבוצעו, קיימות מספר מגבלות שחשוב להציג במפורש.
+
+\begin{itemize}
+    \item \textbf{Features מוגבלים:} ארבעת ה־Features פשוטים ומכוונים למצב השוק, אך ייתכן שהם אינם מכילים signal מספיק לחיזוי next-day direction. הוספת macro data, options-implied variables או order-flow יכולה לשנות את התמונה, אך גם להגדיל סיכון ל־overfitting ול־data snooping.
+    \item \textbf{תקופת Test אחת לכל נכס:} נוסף walk-forward על SPY בלבד. לכן robustness בזמן נבדקה לעומק עבור נכס הייחוס, אך לא עבור כל תשעת הנכסים.
+    \item \textbf{בחירת \(K\):} model selection לפי Validation likelihood העדיף ברוב הנכסים \(K=4\). למרות בדיקת seed stability, עדיין ייתכן שמספר states מתאים משתנה בין תקופות או assets.
+    \item \textbf{Semantic labels:} שמות כמו calm או crisis-like הם פרשנות post-hoc ולא ground truth. ה־HMM אינו ``יודע'' מהו משבר כלכלי.
+    \item \textbf{VIX validation חלקי:} State 2 הנדיר של SPY לא הופיע בחפיפה עם תקופת ה־Test ולכן לא קיבל external validation מול VIX באותו חלון.
+    \item \textbf{Supervised baselines אינם tuning תחרותי:} \tech{Logistic Regression}, \tech{Random Forest} ו־\tech{HistGradientBoosting} נבחרו כ־Baselines שקופים עם hyperparameters קבועים. המטרה לא הייתה להוכיח מהו classifier הטוב ביותר האפשרי.
+    \item \textbf{היקף אימון לא זהה בכל ההשוואות:} לאחר בחירת \(K\) ו־seed, ה־HMM הסופי וה־Baselines הפשוטים משתמשים בכל היסטוריית Train+Validation הזמינה לפני Test. מודלי ה־Supervised הקבועים אומנו על Train בלבד ו־Validation נשאר ללא שימוש. לכן השוואת ה־DPA ביניהם היא אינדיקציה משלימה ולא ניסוי שבו לכל המודלים הוקצתה בדיוק אותה כמות נתוני אימון.
+    \item \textbf{אין backtest למסחר:} DPA אינו שקול לרווחיות. לא נכללו עמלות, slippage, taxes או position sizing ולכן אין להסיק מהתוצאות המלצה למסחר.
+\end{itemize}
+
+\section{מסקנות}
+
+העבודה התחילה משאלה חיזויית: האם Gaussian HMM יכול לזהות Hidden States ולנצל אותם כדי לשפר next-day direction forecasting. לאחר סדרת ניסויים רחבה יותר התקבלה תשובה מפוצלת.
+
+מבחינת forecasting, אין יתרון עקבי. ממוצע ה־DPA בין תשעת הנכסים היה \pct{54.54} ל־Naive train-mean, \pct{54.14} ל־Logistic Regression, \pct{53.90} ל־Discrete Markov Chain, \pct{53.27} ל־Random Forest, \pct{53.06} ל־soft HMM, \pct{52.49} ל־HistGradientBoosting, \pct{52.06} ל־hard HMM, \pct{50.45} ל־Naive persistence ו־\pct{50.27} ל־Moving Average 5. גם walk-forward על SPY מציג פערים קטנים ולא עקביים, ובמדדי MAE/RMSE על SPY ה־HMM כמעט זהה ל־Naive train-mean. לאור מגבלת היקף האימון הלא־זהה בין HMM ל־Supervised baselines, אין לפרש את הדירוג הממוצע כתחרות מובהקת ביניהם. בכל מקרה, התוצאות אינן מספקות בסיס לטעון שה־HMM ``מנבא את השוק'' או מציג יתרון יציב על Baselines פשוטים.
+
+מבחינת latent structure, התוצאה חזקה יותר. ב־SPY מתקבלים ארבעה states בעלי מאפייני return, volatility, range, drawdown ומשך שונים. State נדיר אחד מציג מאפייני stress ברורים. חלוקת \(K=4\) יציבה מאוד בין seeds; posterior entropy עולה סביב state switches אך מפורש כ־diagnostic פנימי של ambiguity; VIX חיצוני מפריד בין חלק מה־states; והקורלציה של SPY עם נכסי risk אחרים משתנה כתלות במשטר.
+
+לכן המסקנה הסופית היא שה־Gaussian HMM בפרויקט זה מתאים יותר ל־\textbf{\tech{modeling conditional market structure}} מאשר ל־\textbf{\tech{point forecasting}}. הערך שלו אינו בכך שהוא יודע בוודאות מה יקרה מחר, אלא בכך שהוא נותן הקשר הסתברותי: באיזה סוג regime השוק נמצא, כמה state זה מתמשך, כמה המודל בטוח בזיהוי, וכיצד מבנה הסיכון והקשרים בין נכסים משתנים יחד איתו.
+
+הרחבה טבעית היא להשתמש ב־posterior של ה־HMM כ־state representation בתוך \tech{Regime-aware Reinforcement Learning}, ולבדוק האם מידע זה משפר policy לאורך זמן תחת transaction costs ו־walk-forward evaluation. זוהי שאלה מחקרית שונה מהחיזוי שנבדק כאן, והיא דורשת ניסוי נפרד ולא inference מתוך התוצאות הנוכחיות.

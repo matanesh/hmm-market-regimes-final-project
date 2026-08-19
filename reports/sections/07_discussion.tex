@@ -1,0 +1,33 @@
+\section{דיון}
+
+הממצא המרכזי של העבודה אינו ``HMM מנבא את השוק'', אלא כמעט ההפך: גם HMM, גם classifiers פשוטים וגם Baselines מתקשים להפיק signal עקבי לחיזוי היום הבא מתוך ארבעת ה־Features שנבדקו. התוצאה השלילית הזו אינה כישלון של הניסוי; היא מאפשרת להפריד בין שתי יכולות שונות של מודל — forecasting ו־representation.
+
+\subsection{למה חיזוי יום־קדימה נשאר קשה?}
+
+חיזוי סימן התשואה ליום הבא הוא בעיה בעלת יחס signal-to-noise נמוך. Features כמו rolling volatility ו־daily range מתארים היטב את סביבת הסיכון, אך אינם בהכרח מנבאים את סימן התשואה של יום בודד. העובדה שגם Logistic Regression, Random Forest ו־HistGradientBoosting אינם מייצרים יתרון עקבי תומכת בפרשנות שהקושי אינו ייחודי ל־HMM.
+
+בנוסף, DPA רגיש ל־class balance. בתקופות שבהן שיעור ימי העלייה גבוה, baseline פשוט שמנבא את הכיוון הדומיננטי יכול להשיג DPA מעל \pct{50}. לכן Balanced Accuracy ו־ROC-AUC חשובים לבדיקת signal חיזויי אמיתי. ברוב הנכסים מדדים אלה נשארו קרובים ל־\pct{50}, ולכן לא נכון להסיק מה־DPA בלבד שיש יכולת forecasting חזקה.
+
+\subsection{מה ה־HMM כן מוסיף?}
+
+בניגוד ל־classifier, HMM בונה ייצוג מפורש של מצב לטנטי ושל דינמיקת המעבר בין states. ב־SPY ההפרדה בין states ניכרת במספר ממדים בו־זמנית: return, volatility, range, drawdown ו־dwell time. ה־posterior confidence גבוה ברוב הימים, והאנטרופיה עולה כאשר המודל נמצא באזור ambiguity בין states. חשוב לא להפריז בפרשנות של הקשר הזה: מאחר ש־hard switch נגזר מאותו posterior, entropy גבוהה סביב switch היא בחלקה תוצאה צפויה של הגדרת הגבול. לכן זהו diagnostic פנימי של confidence, לא validation עצמאי.
+
+הראיות החיצוניות יותר מגיעות ממקומות אחרים: VIX שלא שימש באימון מפריד בין חלק מה־states, והקורלציה של SPY עם נכסים אחרים משתנה לפי state. גם כאן מדובר ב־post-hoc descriptive evidence ולא בהוכחה סיבתית, אך הוא מראה שה־state קשור למאפייני שוק שאינם חלק ישיר מה־Feature Vector של SPY.
+
+לכן ה־HMM מספק \textbf{\tech{conditional market context}}. במקום לשאול רק ``האם מחר יהיה Up?'', ניתן לשאול ``באיזה סוג סביבה סטטיסטית אנחנו נמצאים, כמה המודל בטוח בכך, וכיצד נכסים אחרים נוטים להתנהג בסביבה זו?''. זו יכולת שאינה נמדדת ישירות ב־DPA.
+
+\subsection{\tech{Expressiveness} מול \tech{robustness}}
+
+העבודה מראה גם trade-off בין מספר states לבין יציבות. \(K=2\) נוטה להיות יציב מאוד בין seeds אך גס יחסית. \(K=4\) מאפשר להפריד states עשירים יותר, וב־SPY, QQQ ו־NVDA הוא גם יציב מאוד. לעומת זאת ב־BTC-USD וב־GLD הוא רגיש יותר לאתחול. מכאן שאין הצדקה לקבוע מספר states אוניברסלי לכל asset class.
+
+\subsection{האם ניתן לקרוא ל־states ``Bull'', ``Bear'' ו־``Crash''?}
+
+לא באופן אוטומטי. מספר state הוא label שרירותי, והמודל אינו לומד מושגים כלכליים בשפה אנושית. לכן בדוח נעשה שימוש בשמות תיאוריים רק כאשר הנתונים תומכים בהם. למשל State 2 של SPY מכונה crisis-like משום שהוא נדיר, בעל return שלילי, volatility גבוהה ו־drawdown עמוק. גם שם זה הוא פרשנות ולא ground truth.
+
+\subsection{משך המשטר והנחת \tech{Markov}}
+
+ההשוואה בין \(1/(1-a_{ii})\) לבין dwell time אמפירי לא חשפה פער גדול בממוצע עבור SPY. לכן אין בסיס לטעון שהנחת duration הגאומטרית נכשלת בניסוי זה. עם זאת, בדיקת ממוצעים אינה בוחנת tails או multimodality של durations; Hidden Semi-Markov Model יכול להיות הרחבה טובה אם רוצים למדל משך משטר במפורש \cite{bulla2006application}.
+
+בסיכום, התמונה העקבית ביותר היא שה־Gaussian HMM מתאים בפרויקט זה יותר ל־\textbf{\tech{latent state estimation}} מאשר ל־\textbf{\tech{point forecasting}}. זו אינה נסיגה מהמטרה המקורית אלא ממצא אמפירי שמגדיר בצורה מדויקת יותר היכן המודל מספק ערך.
+
+הפרק הבא אינו מציג תוצאה נוספת של הניסוי הנוכחי. הוא מוצג במפורש כ־\textbf{Future Work}: הצעה לניסוי עתידי ונפרד שיבדוק האם ייצוג ה־regime של ה־HMM יכול להיות שימושי גם כאשר עוברים מחיזוי יום־קדימה לבעיה של קבלת החלטות סדרתית.

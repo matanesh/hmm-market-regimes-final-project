@@ -1,0 +1,55 @@
+asset,model,DPA_direction_accuracy
+BTC-USD,Naive - train mean,0.5133689839572193
+BTC-USD,Logistic Regression,0.5204991087344029
+BTC-USD,Random Forest Classifier,0.5294117647058824
+BTC-USD,HistGradientBoostingClassifier,0.5222816399286988
+BTC-USD,Gaussian HMM - hard state,0.481283422459893
+BTC-USD,Gaussian HMM - soft posterior,0.5204991087344029
+GLD,Naive - train mean,0.5339805825242718
+GLD,Logistic Regression,0.5315533980582524
+GLD,Random Forest Classifier,0.5242718446601942
+GLD,HistGradientBoostingClassifier,0.4975728155339806
+GLD,Gaussian HMM - hard state,0.5145631067961165
+GLD,Gaussian HMM - soft posterior,0.5072815533980582
+HYG,Naive - train mean,0.5461165048543689
+HYG,Logistic Regression,0.5461165048543689
+HYG,Random Forest Classifier,0.5242718446601942
+HYG,HistGradientBoostingClassifier,0.5339805825242718
+HYG,Gaussian HMM - hard state,0.5461165048543689
+HYG,Gaussian HMM - soft posterior,0.5461165048543689
+IWM,Naive - train mean,0.5121359223300971
+IWM,Logistic Regression,0.5121359223300971
+IWM,Random Forest Classifier,0.5072815533980582
+IWM,HistGradientBoostingClassifier,0.5266990291262136
+IWM,Gaussian HMM - hard state,0.5097087378640777
+IWM,Gaussian HMM - soft posterior,0.5024271844660194
+JPM,Naive - train mean,0.5752427184466019
+JPM,Logistic Regression,0.5679611650485437
+JPM,Random Forest Classifier,0.5364077669902912
+JPM,HistGradientBoostingClassifier,0.5048543689320388
+JPM,Gaussian HMM - hard state,0.5169902912621359
+JPM,Gaussian HMM - soft posterior,0.5169902912621359
+NVDA,Naive - train mean,0.5533980582524272
+NVDA,Logistic Regression,0.5412621359223301
+NVDA,Random Forest Classifier,0.5145631067961165
+NVDA,HistGradientBoostingClassifier,0.4830097087378641
+NVDA,Gaussian HMM - hard state,0.4927184466019417
+NVDA,Gaussian HMM - soft posterior,0.5364077669902912
+QQQ,Naive - train mean,0.587378640776699
+QQQ,Logistic Regression,0.5800970873786407
+QQQ,Random Forest Classifier,0.5922330097087378
+QQQ,HistGradientBoostingClassifier,0.5558252427184466
+QQQ,Gaussian HMM - hard state,0.5631067961165048
+QQQ,Gaussian HMM - soft posterior,0.5898058252427184
+SPY,Naive - train mean,0.5849514563106796
+SPY,Logistic Regression,0.5800970873786407
+SPY,Random Forest Classifier,0.5655339805825242
+SPY,HistGradientBoostingClassifier,0.5655339805825242
+SPY,Gaussian HMM - hard state,0.5849514563106796
+SPY,Gaussian HMM - soft posterior,0.5849514563106796
+TLT,Naive - train mean,0.5024271844660194
+TLT,Logistic Regression,0.49271844660194175
+TLT,Random Forest Classifier,0.5
+TLT,HistGradientBoostingClassifier,0.5339805825242718
+TLT,Gaussian HMM - hard state,0.4757281553398058
+TLT,Gaussian HMM - soft posterior,0.470873786407767

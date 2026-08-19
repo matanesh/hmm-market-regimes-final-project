@@ -1,0 +1,254 @@
+{
+  "protocol_version": "supervised-baselines-1.0",
+  "run_id": "supervised_20260811_133344",
+  "timestamp": "20260811_133344",
+  "git_commit": "bed1cf180d84c91469f9c7e7b6afd03cfb781965",
+  "config": {
+    "assets": [
+      "SPY",
+      "QQQ",
+      "IWM",
+      "TLT",
+      "GLD",
+      "HYG",
+      "BTC-USD",
+      "JPM",
+      "NVDA"
+    ],
+    "start_date": "2014-01-01",
+    "end_date": "2024-12-31",
+    "feature_cols": [
+      "log_return",
+      "rolling_volatility_20",
+      "daily_range",
+      "volume_change"
+    ],
+    "validation_size": 0.15,
+    "test_size": 0.15,
+    "logistic_c": 1.0,
+    "logistic_max_iter": 2000,
+    "rf_n_estimators": 500,
+    "rf_max_depth": 6,
+    "rf_min_samples_leaf": 10,
+    "rf_random_state": 42,
+    "rf_n_jobs": -1,
+    "hgb_max_iter": 200,
+    "hgb_learning_rate": 0.05,
+    "hgb_max_leaf_nodes": 15,
+    "hgb_random_state": 42,
+    "cache_dir": "data_cache",
+    "output_root": "experiments_supervised",
+    "hmm_run_dir": "experiments_extended/extended_20260811_121957",
+    "protocol_version": "supervised-baselines-1.0"
+  },
+  "package_versions": {
+    "python": "3.11.15",
+    "platform": "Linux-6.8.0-110-generic-x86_64-with-glibc2.39",
+    "numpy": "2.4.6",
+    "pandas": "3.0.3",
+    "sklearn": "1.9.0"
+  },
+  "status": "completed",
+  "loaded_assets": [
+    "SPY",
+    "QQQ",
+    "IWM",
+    "TLT",
+    "GLD",
+    "HYG",
+    "BTC-USD",
+    "JPM",
+    "NVDA"
+  ],
+  "data_load_failures": [],
+  "asset_status": [
+    {
+      "asset": "SPY",
+      "status": "completed",
+      "n_test_samples": 412
+    },
+    {
+      "asset": "QQQ",
+      "status": "completed",
+      "n_test_samples": 412
+    },
+    {
+      "asset": "IWM",
+      "status": "completed",
+      "n_test_samples": 412
+    },
+    {
+      "asset": "TLT",
+      "status": "completed",
+      "n_test_samples": 412
+    },
+    {
+      "asset": "GLD",
+      "status": "completed",
+      "n_test_samples": 412
+    },
+    {
+      "asset": "HYG",
+      "status": "completed",
+      "n_test_samples": 412
+    },
+    {
+      "asset": "BTC-USD",
+      "status": "completed",
+      "n_test_samples": 561
+    },
+    {
+      "asset": "JPM",
+      "status": "completed",
+      "n_test_samples": 412
+    },
+    {
+      "asset": "NVDA",
+      "status": "completed",
+      "n_test_samples": 412
+    }
+  ],
+  "qa": [
+    {
+      "asset": "SPY",
+      "scaler_fit_partition": "train",
+      "scaler_fit_rows": 1921,
+      "scaler_feature_means": {
+        "log_return": 0.0005503187195024942,
+        "rolling_volatility_20": 0.008666079976633627,
+        "daily_range": 0.010424321612294006,
+        "volume_change": -0.00022104774820210432
+      },
+      "validation_used_for_model_selection": false,
+      "test_used_for_model_selection": false,
+      "target_safe_split": true,
+      "shuffle_used": false
+    },
+    {
+      "asset": "QQQ",
+      "scaler_fit_partition": "train",
+      "scaler_fit_rows": 1921,
+      "scaler_feature_means": {
+        "log_return": 0.0008046434215711696,
+        "rolling_volatility_20": 0.010950205892150464,
+        "daily_range": 0.013283352655245688,
+        "volume_change": -0.0003260178582175755
+      },
+      "validation_used_for_model_selection": false,
+      "test_used_for_model_selection": false,
+      "target_safe_split": true,
+      "shuffle_used": false
+    },
+    {
+      "asset": "IWM",
+      "scaler_fit_partition": "train",
+      "scaler_fit_rows": 1921,
+      "scaler_feature_means": {
+        "log_return": 0.00040345289061957266,
+        "rolling_volatility_20": 0.011648554736036374,
+        "daily_range": 0.015238088395802672,
+        "volume_change": -0.0003135189570274133
+      },
+      "validation_used_for_model_selection": false,
+      "test_used_for_model_selection": false,
+      "target_safe_split": true,
+      "shuffle_used": false
+    },
+    {
+      "asset": "TLT",
+      "scaler_fit_partition": "train",
+      "scaler_fit_rows": 1921,
+      "scaler_feature_means": {
+        "log_return": 0.00026571803927278275,
+        "rolling_volatility_20": 0.007815837426338913,
+        "daily_range": 0.008161077520272186,
+        "volume_change": 0.0004192526801786068
+      },
+      "validation_used_for_model_selection": false,
+      "test_used_for_model_selection": false,
+      "target_safe_split": true,
+      "shuffle_used": false
+    },
+    {
+      "asset": "GLD",
+      "scaler_fit_partition": "train",
+      "scaler_fit_rows": 1921,
+      "scaler_feature_means": {
+        "log_return": 0.00016370438394128063,
+        "rolling_volatility_20": 0.00834471865251603,
+        "daily_range": 0.008172840991077209,
+        "volume_change": 0.0001550148428714994
+      },
+      "validation_used_for_model_selection": false,
+      "test_used_for_model_selection": false,
+      "target_safe_split": true,
+      "shuffle_used": false
+    },
+    {
+      "asset": "HYG",
+      "scaler_fit_partition": "train",
+      "scaler_fit_rows": 1921,
+      "scaler_feature_means": {
+        "log_return": 0.00017651030062656623,
+        "rolling_volatility_20": 0.00378371096479722,
+        "daily_range": 0.004373219309835102,
+        "volume_change": 0.0006547391280911054
+      },
+      "validation_used_for_model_selection": false,
+      "test_used_for_model_selection": false,
+      "target_safe_split": true,
+      "shuffle_used": false
+    },
+    {
+      "asset": "BTC-USD",
+      "scaler_fit_partition": "train",
+      "scaler_fit_rows": 2614,
+      "scaler_feature_means": {
+        "log_return": 0.0019672039632678637,
+        "rolling_volatility_20": 0.034796720178399194,
+        "daily_range": 0.046729763529440166,
+        "volume_change": 0.0023013381988336796
+      },
+      "validation_used_for_model_selection": false,
+      "test_used_for_model_selection": false,
+      "target_safe_split": true,
+      "shuffle_used": false
+    },
+    {
+      "asset": "JPM",
+      "scaler_fit_partition": "train",
+      "scaler_fit_rows": 1921,
+      "scaler_feature_means": {
+        "log_return": 0.000647580056840184,
+        "rolling_volatility_20": 0.014516879444437684,
+        "daily_range": 0.01800782310623317,
+        "volume_change": -0.0002332285923427444
+      },
+      "validation_used_for_model_selection": false,
+      "test_used_for_model_selection": false,
+      "target_safe_split": true,
+      "shuffle_used": false
+    },
+    {
+      "asset": "NVDA",
+      "scaler_fit_partition": "train",
+      "scaler_fit_rows": 1921,
+      "scaler_feature_means": {
+        "log_return": 0.002130481316003606,
+        "rolling_volatility_20": 0.024323966741693015,
+        "daily_range": 0.029717193167274544,
+        "volume_change": -0.00013671317498832378
+      },
+      "validation_used_for_model_selection": false,
+      "test_used_for_model_selection": false,
+      "target_safe_split": true,
+      "shuffle_used": false
+    }
+  ],
+  "artifacts": [
+    "experiments_supervised/supervised_20260811_133344/supervised_results_all_assets.csv",
+    "experiments_supervised/supervised_20260811_133344/supervised_summary.csv",
+    "experiments_supervised/supervised_20260811_133344/comparison_with_hmm.csv",
+    "experiments_supervised/supervised_20260811_133344/dpa_comparison_all_assets.png"
+  ]
+}

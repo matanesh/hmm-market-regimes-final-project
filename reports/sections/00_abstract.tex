@@ -1,0 +1,11 @@
+\begin{abstract}
+עבודה זו בוחנת את השימוש ב־\tech{Gaussian Hidden Markov Model (HMM)} בשתי רמות: חיזוי כיוון התשואה ביום הבא, וזיהוי משטרי שוק סמויים בעלי משמעות סטטיסטית. הניסוי הסופי כולל תשעה נכסים מייצגים — \asset{SPY}, \asset{QQQ}, \asset{IWM}, \asset{TLT}, \asset{GLD}, \asset{HYG}, \asset{BTC-USD}, \asset{JPM} ו־\asset{NVDA} — עבור חלון בקשה \datecode{2014-01-01--2024-12-31}. לכל יום מחושבים ארבעה Features: תשואה לוגריתמית, תנודתיות מתגלגלת ל־20 ימים, טווח תוך־יומי ושינוי לוגריתמי בנפח. החלוקה כרונולוגית ומוגנת מזליגה: Train, Validation ו־Test. בשלב בחירת ה־HMM ה־preprocessing מותאם על Train בלבד; לאחר נעילת \(K\) וה־seed המודל וה־scaler מותאמים מחדש על כל המידע שלפני ה־Test (Train+Validation). מודלי ה־Supervised ML הקבועים מאומנים על Train בלבד.
+
+לכל נכס נבדקו \(K\in\{2,3,4\}\) וחמישה seeds. בחירת \(K\) ו־seed נעשתה לפי Validation log-likelihood בלבד. בנוסף ל־hard state assignment נבדקה תחזית המבוססת על כל וקטור ה־posterior. המודל הושווה לארבעה Baselines פשוטים ולשלושה מודלי Supervised ML: Logistic Regression, Random Forest ו־HistGradientBoosting.
+
+מבחינת חיזוי, לא נמצא יתרון עקבי ל־HMM. ממוצע ה־DPA בין תשעת הנכסים היה \pct{54.54} ל־Naive train-mean, \pct{54.14} ל־Logistic Regression, \pct{53.90} ל־Discrete Markov Chain, \pct{53.27} ל־Random Forest, \pct{53.06} ל־HMM soft-posterior, \pct{52.49} ל־HistGradientBoosting ו־\pct{52.06} ל־HMM hard-state; Naive persistence ו־Moving Average 5 היו קרובים ל־\pct{50}. לעומת זאת, ברמת ייצוג מבנה השוק התקבלו ממצאים תיאוריים ברורים יותר. ב־SPY, מודל \(K=4\) יצר states בעלי תשואה, volatility, drawdown, range ומשך שהייה שונים מאוד; ה־posterior entropy עלה סביב מעברי state; מבנה המצבים היה יציב מאוד בין seeds; ומדד VIX, שלא שימש באימון, הפריד בין חלק מהמשטרים. בנוסף נמצא כי הקורלציות בין SPY לנכסים אחרים משתנות כתלות במשטר.
+
+המסקנה המרכזית היא כי בפרויקט זה ה־HMM שימושי יותר כ־\textbf{\tech{latent market-state estimator}} מאשר כמודל point forecasting ליום הבא. אין בעבודה טענה לרווחיות מסחר, למובהקות סטטיסטית של ההבדלים התיאוריים או ליתרון כללי של HMM על פני מודלים אחרים.
+\end{abstract}
+
+\textbf{מילות מפתח:} \tech{Hidden Markov Model}, משטרי שוק, \tech{posterior uncertainty}, \tech{directional prediction}, \tech{walk-forward}, \tech{Supervised Learning}, \tech{Reinforcement Learning}.

@@ -1,0 +1,32 @@
+{
+  "asset": "BTC-USD",
+  "selected_k": 4,
+  "selected_seed": 2026,
+  "selected_by": "validation_log_likelihood",
+  "selection_validation_log_likelihood": -1853.9084225132142,
+  "selection_validation_log_likelihood_per_observation": -3.3105507544878825,
+  "final_fit_converged": true,
+  "final_fit_iterations": 72,
+  "final_fit_time_sec": 1.1345081329345703,
+  "final_train_log_likelihood": -11959.649334240743,
+  "final_test_log_likelihood": -1950.0906695764008,
+  "final_aic_train": 24061.298668481486,
+  "final_bic_train": 24491.753769458617,
+  "posterior_uncertainty": {
+    "n_test_observations": 561,
+    "n_posterior_argmax_switches": 74,
+    "switch_rate_pct": 13.19073083778966,
+    "mean_entropy": 0.1032584445390836,
+    "median_entropy": 0.014886568142118488,
+    "mean_confidence": 0.9446406222040566,
+    "mean_entropy_on_switch_days": 0.28460401030101784,
+    "mean_entropy_on_non_switch_days": 0.07570285549106896,
+    "mean_entropy_near_switch_plus_minus_1": 0.24462399706718133,
+    "entropy_abs_return_correlation": 0.2052251292459258,
+    "entropy_rolling_volatility_correlation": 0.15630400871712063,
+    "low_entropy_quartile_mean_abs_return_pct": 1.103454657885583,
+    "high_entropy_quartile_mean_abs_return_pct": 2.4973458811126696,
+    "low_entropy_quartile_mean_rolling_vol_pct": 1.6582813647480075,
+    "high_entropy_quartile_mean_rolling_vol_pct": 2.626476640825104
+  }
+}

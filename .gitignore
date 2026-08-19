@@ -26,8 +26,6 @@ share/python-wheels/
 *.egg
 
 # PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
 
@@ -81,20 +79,13 @@ profile_default/
 ipython_config.yaml
 
 # pyenv
-#   For a library or service, you might not want to ignore these files if you want to
-#   install them via pyenv into one of your isolated environments.
 .python-version
 
 # pipenv
-#   According to pypi.org, Pipenv is not recommended for workflows that manage multiple
-#   positions who have conflicting priorities with regards to whether a package
-#   should be installed or not. However, if you feel that you are in the exceptional
-#   minority of projects that could benefit from a pipenv do not ignore this file.
-#   Some services may benefit from it, so we are adding it to the exceptions.
 # Pipfile
 # Pipfile.lock
 
-# PEP 582; used by e.g. gregory-backend
+# PEP 582
 __pypackages__/
 
 # Celery stuff
@@ -131,19 +122,6 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-# Data
-data/
-*.csv
-*.txt
-*.png
-*.jpg
-*.jpeg
-
-# Experiments
-experiments/
-*.csv
-*.png
-
 # Local settings
 *.local
 
@@ -158,7 +136,7 @@ experiments/
 .DS_Store
 Thumbs.db
 
-# LaTeX auxiliary files (the compiled submission PDF is tracked)
+# LaTeX auxiliary files (the compiled submission PDF IS tracked)
 *.aux
 *.bbl
 *.blg
@@ -167,3 +145,47 @@ Thumbs.db
 *.fls
 *.fdb_latexmk
 *.synctex.gz
+
+# Temporary data cache (used for reproducible downloads)
+data_cache/
+
+# Obsolete/old experiment runs (final artifacts are tracked in specific directories)
+experiments_canonical/
+experiments_multi_asset/
+experiments_extended/run_*/
+experiments_extended/extended_*/
+!experiments_extended/extended_20260811_121957/
+experiments_supervised/supervised_*/
+!experiments_supervised/supervised_20260811_133344/
+
+# Internal/development workflow documents
+AGENT_EXECUTION_INSTRUCTIONS.md
+REVIEW_BRIEF_FOR_EXTERNAL_MODEL.md
+FINAL_SUBMISSION_EXECUTION.md
+FINAL_REPORT.md
+PROJECT_COMPLETED.md
+CHANGES.md
+AUDIT.md
+MODEL_COMPARISON_SUMMARY.md
+RESEARCH_EXTENSION_PLAN.md
+
+# Obsolete scripts
+run_canonical.py
+run_experiment.py
+run_multi_asset_experiments.py
+run_remaining_experiments.py
+run_extended_experiments.py
+hmm_run.py
+hmm_run_original.py
+model_comparison.py
+model_comparison_quick.py
+interpret_regimes.py
+analyze_winning_cases.py
+build_final_notebook.py
+patch_final_notebook.py
+patch_pdf_readability.py
+patch_protocol_clarification.py
+test_significance.py
+test_setup.py
+robustness_check.py
+build_summary.py

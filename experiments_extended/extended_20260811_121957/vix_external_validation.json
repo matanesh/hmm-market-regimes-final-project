@@ -1,0 +1,9 @@
+{
+  "n_overlapping_days": 412,
+  "entropy_vix_level_correlation": -0.035899556465719615,
+  "entropy_abs_vix_change_correlation": -0.010482996093921363,
+  "low_entropy_quartile_mean_vix": 14.812330023756305,
+  "high_entropy_quartile_mean_vix": 14.98563113721829,
+  "low_entropy_quartile_mean_abs_vix_change_%": 3.792776541108416,
+  "high_entropy_quartile_mean_abs_vix_change_%": 4.489308028185687
+}

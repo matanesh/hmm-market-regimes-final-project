@@ -1,0 +1,68 @@
+\section{הרחבה עתידית: \tech{Regime-aware Reinforcement Learning}}
+
+הרחבה טבעית של הפרויקט היא מעבר מבעיה של \textbf{חיזוי} לבעיה של \textbf{קבלת החלטות סדרתית}. ב־Supervised Learning אנו מנסים ללמוד פונקציה מה־Features אל יעד ידוע מראש, למשל \(P(y_{t+1}=1\mid x_t)\). ב־Reinforcement Learning הסוכן אינו נדרש רק לומר מה צפוי לקרות; הוא בוחר פעולה המשפיעה על הרווח המצטבר לאורך זמן.
+
+\subsection{ניסוח כ־\tech{Markov Decision Process}}
+
+ניתן להגדיר את בעיית המסחר כ־MDP שבו בכל יום קיימים observation, action ו־reward. לדוגמה:
+
+\begin{itemize}
+    \item \textbf{Observation:} ארבעת ה־Features הנוכחיים, posterior probabilities של ה־HMM, posterior entropy, והפוזיציה הנוכחית בתיק.
+    \item \textbf{Action:} בגרסה פשוטה \tech{sell / hold / buy}; בגרסה רציפה יותר — משקל \(w_t\in[0,1]\) בנכס.
+    \item \textbf{Reward:} תשואת התיק נטו לאחר transaction costs, עם penalty אופציונלי ל־turnover או לסיכון.
+\end{itemize}
+
+ניסוח אפשרי של reward הוא:
+
+\begin{equation}
+R_{t+1}=w_t r_{t+1}-c\lvert w_t-w_{t-1}\rvert-\lambda\,\mathrm{RiskPenalty}_{t+1},
+\end{equation}
+
+כאשר \(c\) מייצג עלות עסקה ו־\(\lambda\) את משקל רתיעת הסיכון. בניגוד לניסוי החיזוי הנוכחי, כאן transaction costs אינם פרט שולי: policy שמחליפה פוזיציה לעיתים קרובות יכולה להיראות מוצלחת לפני עלויות ולהיכשל לאחריהן.
+
+\subsection{למה לשלב HMM בתוך RL?}
+
+הרעיון המעניין ביותר אינו להחליף את ה־HMM ב־RL, אלא להשתמש ב־HMM כשכבת state estimation. במקום לתת לסוכן hard label כמו ``State 3'', ניתן להזין את כל הווקטור
+
+\begin{equation}
+\left[\gamma_t(1),\ldots,\gamma_t(K),H_t\right],
+\end{equation}
+
+כך שהסוכן יודע גם מהו regime הסביר וגם כמה ה־HMM בטוח בו. לדוגמה, policy יכולה ללמוד באופן עצמאי שתקופה בעלת posterior חד דורשת פעולה שונה מתקופה שבה שני states מתחרים ביניהם. אין צורך לקודד מראש כלל כמו ``ב־crisis state מוכרים''; ה־RL בודק אם מידע זה אכן מועיל ל־reward.
+
+הניסוי הנקי ביותר יהיה ablation בשלוש רמות:
+
+\begin{enumerate}
+    \item \textbf{RL-Features:} הסוכן רואה רק את ארבעת ה־Features המקוריים.
+    \item \textbf{RL-Regime:} אותם Features בתוספת HMM posterior probabilities.
+    \item \textbf{RL-Regime-Uncertainty:} תוספת posterior entropy ומידע על הפוזיציה הנוכחית.
+\end{enumerate}
+
+השוואה כזו הייתה עונה על שאלה ממוקדת: \textit{האם מידע לטנטי על regime מוסיף ערך אינקרמנטלי למדיניות מעבר למידע הגולמי שכבר קיים ב־Features?} זהו המשך ישיר יותר של העבודה מאשר להריץ אלגוריתם RL שאינו משתמש בתוצאות ה־HMM.
+
+\subsection{אלגוריתמים אפשריים}
+
+לפעולות דיסקרטיות ניתן להתחיל במודל actor-critic פשוט. לפעולת allocation רציפה, שתי אפשרויות טבעיות הן \tech{PPO} \cite{schulman2017ppo} ו־\tech{Soft Actor-Critic (SAC)} \cite{haarnoja2018sac}. PPO נפוץ בגלל עדכונים יציבים יחסית באמצעות clipped objective; SAC מתאים במיוחד ל־continuous control ומעודד exploration באמצעות entropy.
+
+קיימות מסגרות ייעודיות כמו \tech{FinRL}, שנבנו כדי לפשט את הגדרת סביבת המסחר, data pipeline ו־market frictions \cite{liu2021finrl}. עם זאת, שימוש בספרייה אינו פותר את שאלות המתודולוגיה: עדיין צריך להגדיר reward, actions, transaction costs, train/validation/test, multiple seeds ו־walk-forward evaluation.
+
+\subsection{מה מראה הספרות?}
+
+התמונה בספרות אינה חד־משמעית. Yang et al. אימנו ensemble של PPO, A2C ו־DDPG על 30 מניות Dow Jones ודיווחו על Sharpe ratio גבוה יותר מהמדד ומתיק minimum-variance בניסוי שלהם \cite{yang2020ensemble}. Zhang, Zohren and Roberts בחנו Deep RL על 50 חוזים עתידיים ממספר asset classes ודיווחו על ביצועים חיוביים גם בנוכחות transaction costs משמעותיים \cite{zhang2019drltrading}.
+
+מצד שני, תוצאות חיוביות אינן מובטחות כאשר מרחיבים את הבדיקה. Kruthof and M{\"u}ller בחנו SAC על שבעה datasets של מניות עם יותר מ־300 שנות out-of-sample מצטברות. הם מצאו שהמודל לא ניצח באופן שיטתי baseline של \(1/N\) גם ללא frictions, וש־turnover גבוה גרם לביצועים נטו שליליים כבר תחת עלויות עסקה מתונות של \pct{0.1} \cite{kruthof2025beat1n}. המסקנה מכאן אינה ש־RL ``לא עובד'', אלא שהערכתו רגישה מאוד לפרוטוקול, לעלויות ולבחירת benchmark.
+
+\subsection{כיצד היינו מבצעים את הניסוי בצורה הוגנת?}
+
+כדי שהרחבה כזו תהיה משכנעת, היינו שומרים על אותם עקרונות שהנחו את הפרויקט הנוכחי:
+
+\begin{itemize}
+    \item חלוקה כרונולוגית ו־walk-forward, ללא shuffle.
+    \item התאמת HMM ו־scaler על המידע הזמין באותו fold בלבד.
+    \item multiple seeds לכל policy, משום ש־Deep RL רגיש לאתחול.
+    \item transaction costs ו־turnover מפורשים ב־reward ובהערכה.
+    \item Baselines כגון Buy-and-Hold, Moving Average, policy ללא HMM, ו־policy עם HMM.
+    \item מדדים כגון cumulative return, Sharpe, maximum drawdown ו־turnover, לצד בדיקה אם התוצאות שורדות עלויות עסקה.
+\end{itemize}
+
+לא בוצע ניסוי RL בדוח הנוכחי, ולכן אין כאן טענה שהרחבת Regime-aware RL תשפר ביצועים. היא מוצגת ככיוון מחקר שמנצל באופן ישיר את הממצא המרכזי של העבודה: ה־HMM נראה שימושי יותר כ־state estimator מאשר כ־one-step predictor. RL הוא מסגרת טבעית לבדוק האם state estimate כזה מועיל כאשר הבעיה מוגדרת כקבלת החלטות לאורך זמן ולא כחיזוי סימן של יום בודד.

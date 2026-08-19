@@ -1,0 +1,4 @@
+model,mean_DPA_direction_accuracy,assets
+HistGradientBoostingClassifier,0.5248597722898123,9
+Logistic Regression,0.5413823173674687,9
+Random Forest Classifier,0.5326638746113332,9

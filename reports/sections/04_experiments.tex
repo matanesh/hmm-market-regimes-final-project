@@ -1,0 +1,54 @@
+\section{ניסויים, \tech{Baselines} ומדדי הערכה}
+
+\subsection{\tech{Baselines} פשוטים}
+
+ה־HMM הושווה תחילה לארבעה כללים פשוטים. Baseline הוא נקודת ייחוס: אם מודל מורכב אינו מצליח לעבור כלל פשוט, אין סיבה לייחס למורכבות שלו יתרון חיזויי. ארבעת הכללים הם:
+
+\begin{itemize}
+    \item \textbf{\tech{Naive - train mean:}} זהו השם שנשמר ב־artifact. בהערכת ה־Test הסופית התחזית הקבועה מבוססת למעשה על ממוצע \(\texttt{next\_log\_return}\) בכל היסטוריית ה־pre-Test הזמינה, כלומר Train+Validation, לאחר סיום model selection. בפועל זהו כלל פשוט מאוד: הוא אינו מנסה לזהות regime או דפוס יומי, אלא ממשיך עם הכיוון המשתמע מהממוצע ההיסטורי.
+    \item \textbf{\tech{Naive persistence:}} מנבא שהכיוון הבא יהיה זהה לכיוון האחרון שנצפה.
+    \item \textbf{\tech{Moving Average 5:}} כלל סיבתי המבוסס על ממוצע נע קצר של תשואות זמינות עד היום הנוכחי.
+    \item \textbf{\tech{Discrete Markov Chain:}} מודל מעבר נצפה בין Up/Down ללא Hidden States; הוא לומד, למשל, מה הייתה בעבר ההסתברות ליום Up לאחר יום Up או לאחר יום Down.
+\end{itemize}
+
+שלושת ה־Baselines הפשוטים שדורשים אומדן היסטורי משתמשים, כמו ה־HMM הסופי, במידע שהיה זמין לפני תחילת ה־Test. אף אחד מהם אינו משתמש ב־Test targets לצורך התאמה.
+
+\subsection{\tech{Supervised ML Baselines}}
+
+כדי לבדוק אם הקושי החיזויי נובע מבחירת HMM דווקא, נוספו שלושה classifiers המקבלים בדיוק את אותו Feature Vector ואותו split כרונולוגי:
+
+\begin{itemize}
+    \item \tech{Logistic Regression} עם \(C=1\) ו־scaling על Train בלבד.
+    \item \tech{Random Forest Classifier} עם 500 עצים, depth מרבי 6 ו־minimum leaf size של 10.
+    \item \tech{HistGradientBoostingClassifier} עם 200 iterations, learning rate 0.05 ו־15 leaves לכל היותר.
+\end{itemize}
+
+ה־hyperparameters נקבעו מראש, ללא search על Validation או Test, ושלושת המודלים הותאמו על Train בלבד. לכן הם משמשים \textbf{Baselines משלימים} ולא תחרות head-to-head מושלמת על כמות זהה של pre-Test observations: ה־HMM, לאחר בחירת \(K\) ו־seed על Validation, עובר refit על Train+Validation. מטרת ההשוואה היא לבדוק האם מודלים ליניאריים ולא־ליניאריים פשוטים מחלצים signal חיזויי ברור מאותם Features, ולא להכריז על classifier אופטימלי.
+
+\subsection{מדדים}
+
+המדד המרכזי לחיזוי כיוון הוא \tech{Directional Prediction Accuracy (DPA)}. זהו פשוט אחוז הימים שבהם המודל צדק בסימן: אם בפועל התשואה של מחר חיובית והמודל חזה תשואה חיובית, זו הצלחה, בלי קשר לגודל התשואה. פורמלית:
+
+\begin{equation}
+\mathrm{DPA}=\frac{1}{N}\sum_{t=1}^{N}\mathbb{1}\left[\operatorname{sign}(\hat r_{t+1})=\operatorname{sign}(r_{t+1})\right].
+\end{equation}
+
+DPA של \pct{50} נשמע כמו נקודת ייחוס טבעית, אך בשוק שבו מספר ימי העלייה והירידה אינו מאוזן בדיוק, גם כלל פשוט שמנבא כמעט תמיד את הכיוון הנפוץ יכול לעבור \pct{50}. לכן בדוח DPA נבחן מול Baselines וביחד עם מדדים נוספים, ולא כראיה עצמאית ל־predictive edge.
+
+למודלים שמחזירים תחזית מספרית לתשואה נמדדו גם MAE ו־RMSE על \textbf{next-day log return}. MAE מודד את גודל השגיאה הממוצע, ואילו RMSE מעניש יותר טעויות גדולות. בנוסף נשמר MAPE על מחיר הסגירה המשתמע מהתחזית, בעיקר כדי לשמור התאמה למדדים שנקבעו בתכנון הפרויקט \cite{hyndman2006another}. MAPE אינו המדד המרכזי כאן: מחיר מחר בדרך כלל קרוב למחיר היום ולכן MAPE על מחיר יכול להיראות נמוך גם עבור Baseline פשוט, בעוד תשואה יומית יכולה להיות קרובה לאפס ולהפוך MAPE על תשואה לבלתי יציב.
+
+עבור מודלי classification נמדדו גם Balanced Accuracy, ROC-AUC, Log Loss ו־Brier Score. Balanced Accuracy נותן משקל שווה להצלחה בימי Up ובימי Down ולכן עוזר להתמודד עם חוסר איזון בין המחלקות; ROC-AUC בודק עד כמה המודל יודע לדרג ימי Up מעל ימי Down על פני ספי החלטה שונים. Log Loss ו־Brier Score בוחנים גם את איכות ההסתברויות שהמודל מחזיר ולא רק את ההחלטה הסופית. עבור classifiers, ה־DPA שקול ל־accuracy של מחלקת הכיוון; עבור המודלים שמחזירים \(\hat r_{t+1}\), הכיוון נגזר מסימן התחזית.
+
+ל־HMM נשמרו בנוסף log-likelihood, AIC/BIC, convergence, occupancy, Transition Matrix, dwell time, posterior confidence וזמן התאמה. מדדים אלה אינם מדדי forecasting; הם מתארים התאמה פנימית, מורכבות ומבנה של המודל. זמן הריצה נשמר לצורך reproducibility ולא שימש לבחירת מודל.
+
+\subsection{ניסויי \tech{Robustness}}
+
+תוצאה על חלוקת Train/Test יחידה יכולה להיות מקרית או תלויה בתקופה מסוימת. לכן מעבר ל־held-out split נוספו שלושה סוגי בדיקות:
+
+\begin{enumerate}
+    \item \textbf{Seed stability:} התאמת כל \(K\) בחמישה seeds והשוואת חלוקת הימים באמצעות \tech{Adjusted Rand Index (ARI)}. המדד בודק עד כמה שתי חלוקות של אותם ימים ל־states דומות זו לזו גם אם מספרי ה־labels עצמם הוחלפו; ערך קרוב ל־1 מעיד על חלוקה דומה מאוד.
+    \item \textbf{Walk-forward על SPY:} שלושה expanding windows, כאשר בכל fold נבנים Train, Validation ו־Test חדשים באופן כרונולוגי. כך ניתן לבדוק אם מסקנת החיזוי נשענת על חלון Test יחיד או חוזרת גם בתקופות אחרות.
+    \item \textbf{External / cross-asset validation:} השוואת states של SPY ל־VIX, שלא שימש באימון, ובחינת התנהגות נכסים אחרים כתלות ב־SPY state. כאן המטרה אינה לחזות טוב יותר אלא לבדוק האם ה־states שנמצאו קשורים גם למידע שוק שלא הוזן ישירות למודל של SPY.
+\end{enumerate}
+
+בדיקות אלה אינן נועדו לשפר את Test בדיעבד, אלא לבדוק אם המסקנות התיאוריות נשארות סבירות גם מעבר לריצה יחידה.
