@@ -1,8 +1,8 @@
 # Gaussian HMM for Market Regime Analysis
 
-**Matan Eshel**  
-Student ID: 203502802  
-Advanced Methods in Machine Learning  
+**Matan Eshel**
+Student ID: 203502802
+Advanced Methods in Machine Learning
 Afeka Academic College of Engineering
 
 ---
@@ -157,6 +157,53 @@ The notebook **uses saved verified experiment artifacts by default** (no network
 
 ---
 
+## Run in Google Colab
+
+### Recommended: Run in Google Colab
+
+For the easiest platform-independent review, use Google Colab.
+This avoids local Python, Windows, WSL, and dependency configuration issues.
+
+The Colab launcher automatically:
+
+1. Clones the public GitHub repository.
+2. Installs the exact Python dependencies.
+3. Runs the automated test suite.
+4. Executes the final project notebook from top to bottom.
+5. Verifies that the saved experiment artifacts, tables, and figures load correctly.
+
+The main scientific notebook already contains saved outputs, so the project
+can also be reviewed directly on GitHub without rerunning the experiments.
+
+A complete re-training of all HMM experiments is optional and may take
+several minutes and require access to Yahoo Finance.
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/matanesh/hmm-market-regimes-final-project/blob/main/HMM_Market_Regimes_Project_Colab.ipynb)
+
+---
+
+## Recommended Review Order
+
+1. **Fastest** — view the already-executed
+   `HMM_Market_Regimes_Project.ipynb` directly on GitHub.
+
+2. **Recommended reproducibility check** — use
+   "Run in Google Colab" (badge above).
+
+3. **Advanced / full reproduction** — clone the repository locally and run:
+   ```bash
+   python run_extended_analysis.py
+   ```
+
+Google Colab is recommended for reviewing and verifying the notebook
+because it provides a clean and consistent environment.
+
+> **Note:** Colab is not necessarily the best environment for the complete
+> 9-asset, 5-seed experiment, because runtime limits and Yahoo Finance
+> network availability may vary.
+
+---
+
 ## 7. VERIFY NOTEBOOK
 
 Execute the notebook top-to-bottom programmatically:
@@ -232,7 +279,7 @@ xelatex -interaction=nonstopmode -halt-on-error report.tex
 xelatex -interaction=nonstopmode -halt-on-error report.tex
 ```
 
-Produces `reports/report.pdf`.  
+Produces `reports/report.pdf`.
 The LaTeX source uses a portable font setup:
 - **Default:** FreeSerif (standard in TeX Live via `fonts-freefont-ttf`)
 - **Monospace:** DejaVu Sans Mono (standard in TeX Live)
@@ -257,7 +304,7 @@ All figures referenced in `reports/sections/*.tex` exist in these directories.
 
 ## 12. Scientific Note
 
-**This project makes no profitability claim and does not constitute investment advice.**  
+**This project makes no profitability claim and does not constitute investment advice.**
 The experimental design prevents data leakage via chronological target-safe splits. Train/Validation/Test partitions are strictly ordered. Model selection uses validation criteria only. RL is future work only and was not evaluated.
 
 ---
