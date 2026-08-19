@@ -1,15 +1,14 @@
 #!/usr/bin/env python3
 """Extended robustness and regime-information analysis for the HMM project.
 
-This runner is deliberately separate from ``run_canonical.py``.  The original
-canonical artifacts remain frozen; this script asks additional questions that
-were identified during external review:
+This script performs additional robustness and regime-information analyses
+beyond the core HMM experiment:
 
-1. Are inferred states stable across random initializations?
-2. Are conclusions robust across expanding chronological windows?
-3. Do posterior probabilities quantify uncertainty around regime boundaries?
-4. Does an SPY regime describe the behavior of economically different assets?
-5. Is HMM more useful as a latent-state estimator than as a one-day predictor?
+1. Seed stability: Are inferred states stable across random initializations?
+2. Walk-forward robustness: Are conclusions robust across expanding chronological windows?
+3. Posterior uncertainty: Do posterior probabilities quantify uncertainty around regime boundaries?
+4. Cross-asset regime interpretation: Does an SPY regime describe the behavior of economically different assets?
+5. Latent-state estimation vs prediction: Is HMM more useful as a latent-state estimator than as a one-day predictor?
 
 The held-out test segment is not touched during K/seed selection.  After model
 selection on validation log-likelihood, the selected specification is refit on

@@ -117,7 +117,7 @@ Four contemporaneous features known by the current day's close:
 │       └── manifest.json
 ├── reports/
 │   ├── report.pdf                     # Final compiled PDF
-│   ├── report.tex                     # LaTeX source
+│   ├── report.tex                     # LaTeX source (portable: Noto Serif Hebrew / David CLM)
 │   ├── references.bib
 │   └── sections/                      # Modular .tex sections
 │       ├── 00_abstract.tex
@@ -233,7 +233,12 @@ xelatex -interaction=nonstopmode -halt-on-error report.tex
 ```
 
 Produces `reports/report.pdf`.  
-Requires XeLaTeX with David CLM / DejaVu fonts (or fallback fonts available in standard TeX Live).
+The LaTeX source uses a portable font setup:
+- **Preferred:** David CLM (if installed locally)
+- **Default fallback:** Noto Serif Hebrew (standard in TeX Live)
+- **Monospace:** DejaVu Sans Mono (standard in TeX Live)
+
+The `report.tex` defines `\hebrewmainfont` as `Noto Serif Hebrew` by default. If David CLM is available on your system, uncomment the line in `report.tex` to use it instead.
 
 ---
 
